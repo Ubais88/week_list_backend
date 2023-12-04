@@ -6,41 +6,29 @@ require('dotenv').config()
 
 const { signup, login } = require("../controller/auth");
 const { auth } = require("../middlewares/auth.js");
+const { weeklist } = require("../controller/weeklist.js")
+const { createweekTask , updateweekTask , updateActiveStatus ,getAllTask, deleteWeekTask , getTask , feed } = require("../controller/weektask.js")
 
 
 router.post('/signup', signup);
 router.get('/login', login);
+router.post('/createweek', auth , weeklist);
+router.post('/createtask', auth , createweekTask);
+router.put('/update/:taskId', auth , updateweekTask);
+router.put('/updatestatus/:taskId', auth , updateActiveStatus);
+router.delete('/deletetask/:taskId', auth , deleteWeekTask);
+router.get('/alltask', auth , getAllTask);
+router.get('/gettask/:taskId', auth , getTask);
+router.get('/feed/', auth , feed);
 
 // test
-router.get('/test', auth , (req, res) => {
+router.get('/test', auth , (req, res , next) => {
     res.json({
         success:true,
         message:'welcome to the test service'
     })
+    next();
 })
-
-
-// Test route that requires JWT token for access
-// router.get('/test', authenticateToken, (req, res) => {
-//     res.json({ message: 'You have access to this protected route!' });
-//   });
-  
-//   // Middleware to verify JWT token
-//   function authenticateToken(req, res, next) {
-//     const token = req.body.token
-  
-//     if (token) {
-//       jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-//         if (err) {
-//           return res.status(403).json({ message: 'Token verification failed' });
-//         }
-//         req.userId = decoded.userId;
-//         next();
-//       });
-//     } else {
-//       res.status(401).json({ message: 'Token not provided' });
-//     }
-//   }
 
 
 module.exports = router;

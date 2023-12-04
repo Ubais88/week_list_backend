@@ -40,11 +40,12 @@ exports.signup = async (req, res) => {
         message: "data not saved",
       });
     }
-
+    const token = jwt.sign(savedUser.toJSON() , process.env.JWT_SECRET, {expiresIn:"7d"})
     res.status(200).json({
       success: true,
+      token: token,
       savedUser: savedUser,
-      message: "User saved successfully",
+      message: "User saved successfully and login successfully",
     });
   } catch (error) {
     console.log(error);
@@ -77,7 +78,7 @@ exports.login = async (req, res) => {
 
     if (await bcrypt.compare(password, savedUser.password)) {
       // jwt token creation
-      const token = jwt.sign(savedUser.toJSON() , process.env.JWT_SECRET, {expiresIn:"2h"})
+      const token = jwt.sign(savedUser.toJSON() , process.env.JWT_SECRET, {expiresIn:"7d"})
       return res.status(200).json({
         success: true,
         message: "User Log in successfully",
